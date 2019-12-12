@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="dolphins-core-js">
+    <output-path>C:\Users\miralace\space\dolphins\core\build\libs</output-path>
+    <root id="archive" name="dolphins-core-js.jar">
+      <element id="module-output" name="dolphins.dolphins-core.jsMain" />
+    </root>
+  </artifact>
+</component>
