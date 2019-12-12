@@ -42,7 +42,7 @@ Complete sample: https://gist.github.com/happy-bracket/8ca92b70d48d2ab4e2680b4ab
 As aforesaid, Dolphins is zero-dependency and highly customizable. All those letters let you choose what type of effects you need in your app, be it rx.Single, rx.Observable or Coroutine Flow. This is possible via a certain trick, called HKT, typeclasses and a little
 alchemy to make it work on JVM (see **KindedJ**, **Arrow Kt**). End-users of the library will not need to be worry about all that, they will be supplied with digestible contract depending on what flavor of library they choose.
 - **How exactly does flavor switch happen?**
-The switch happens through providing instances for typeclasses, defined in `ru.hbracket.f`. Those typeclasses declare basic
+The switch happens through providing instances for typeclasses, defined in `dolphins.foundation.typeclasses`. Those typeclasses declare basic
 primitive operations that `Observable`-s or `Flow` can do, such as `map`, `flatMap` etc. After that, Dolphins handle the rest.
 - **Is it bound to Android only?**
 No. You can use Dolphins in Web, Desktop and iOS, it only needs that you provide concurrent primitives for that platform.
