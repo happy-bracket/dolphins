@@ -20,6 +20,7 @@ sealed class ChatMutation {
 
 sealed class ChatEffect {
   data class SendMessage(val text: String) : ChatEffect()
+  object SubscribeToChat : ChatEffect()
 }
 
 fun ChatState.update(mutation: ChatMutation): Pair<ChatState, Set<ChatEffect>> =
@@ -33,6 +34,8 @@ Here `ChatState` is a core immutable data class, which encodes relevant applicat
 Then you take a `Feature` constructor of chosen flavor, shove it all in and then you have a complete working entity, which you can mutate and subscribe to its state to update your UI.
 
 It's worth noting that nothing of that is platform-dependent and those you can transfer your whole interaction logic between platforms. All you need is to choose appropriate implementation of `Feature`. Although, you'd probably want to adapt the state you get to state that's most convenient to display on your UI. This task is accomplished through middlewares, which are on my roadmap.
+
+Complete sample: https://gist.github.com/happy-bracket/8ca92b70d48d2ab4e2680b4ab318061c
 
 ## Questions that might come up
 - **What the hell are all those letters in the Feature class?**
