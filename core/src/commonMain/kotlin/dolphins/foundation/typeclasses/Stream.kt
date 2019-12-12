@@ -1,6 +1,6 @@
-package ru.hbracket.dolphins.f.ts
+package dolphins.foundation.typeclasses
 
-import ru.hbracket.dolphins.f.Kind
+import dolphins.foundation.Kind
 
 /**
  * Represents pull/push computed stream of values.

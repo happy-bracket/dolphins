@@ -1,13 +1,13 @@
-package ru.hbracket.dolphins.tea
+package dolphins.core
 
-import ru.hbracket.dolphins.f.Kind
-import ru.hbracket.dolphins.f.ts.Consume
-import ru.hbracket.dolphins.f.ts.Handle
-import ru.hbracket.dolphins.f.ts.Rendezvous
-import ru.hbracket.dolphins.f.ts.Shift
-import ru.hbracket.dolphins.f.types.either.Either
-import ru.hbracket.dolphins.f.types.either.left
-import ru.hbracket.dolphins.f.types.either.right
+import dolphins.foundation.Kind
+import dolphins.foundation.typeclasses.Consume
+import dolphins.foundation.typeclasses.Handle
+import dolphins.foundation.typeclasses.Rendezvous
+import dolphins.foundation.typeclasses.Shift
+import dolphins.foundation.types.either.Either
+import dolphins.foundation.types.either.left
+import dolphins.foundation.types.either.right
 
 class Feature<G, R, D, H : Handle, S, M, E, A>(
     initialState: S,

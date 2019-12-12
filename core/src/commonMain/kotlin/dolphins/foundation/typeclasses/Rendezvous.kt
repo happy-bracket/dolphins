@@ -1,7 +1,6 @@
-package ru.hbracket.dolphins.f.ts
+package dolphins.foundation.typeclasses
 
-import ru.hbracket.dolphins.f.Kind
-
+import dolphins.foundation.Kind
 
 interface Rendezvous<F, R> : Stream<F> {
 

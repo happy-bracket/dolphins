@@ -1,7 +1,7 @@
-package ru.hbracket.dolphins.f.ts
+package dolphins.foundation.typeclasses
 
-import ru.hbracket.dolphins.f.Kind
-import ru.hbracket.dolphins.f.ShadyException
+import dolphins.foundation.Kind
+import dolphins.foundation.ShadyException
 
 interface Functor<F> {
 

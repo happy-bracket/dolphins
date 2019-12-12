@@ -1,10 +1,10 @@
-package ru.hbracket.dolphins.f.ts
+package dolphins.foundation.typeclasses
 
-import ru.hbracket.dolphins.f.Kind
+import dolphins.foundation.Kind
 
 /**
  * For concurrent primitives, provides ways to change execution context.
- * [D] is the type of context. For RxJava it will be `io.reactivex.Dispatcher`, for coroutines - TODO
+ * [D] is the type of context. For RxJava it will be `io.reactivex.Scheduler`, for coroutines - Dispatcher
  */
 interface Shift<F, D> {
 

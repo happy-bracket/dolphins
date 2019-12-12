@@ -1,4 +1,4 @@
-package ru.hbracket.dolphins.f.types.either
+package dolphins.foundation.types.either
 
 sealed class Either<out L, out R> {
 

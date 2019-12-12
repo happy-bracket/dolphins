@@ -1,2 +1,3 @@
 rootProject.name = 'dolphins'
-
+include 'core'
+findProject(':core')?.name = 'dolphins-core'
