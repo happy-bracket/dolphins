@@ -57,6 +57,7 @@ Planned features:
 - Debugging utils
 - Middlewares (hard to tell yet, how they will be implemented)
 - Testing utils
+- Predefined effects for networking and database
 
 Platforms to support:
 - Kotlin Coroutines
