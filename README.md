@@ -49,7 +49,7 @@ No. You can use Dolphins in Web, Desktop and iOS, it only needs that you provide
 Most popular choices (Rx*, Coroutines) are planned to be provided by default.
 
 ## What is Dolphins in the long run?
-It is in very early stage and depending on my ability or wish to develop it.
+It is in very early stage and highly depends on my ability or wish to develop it.
 
 Planned features:
 - Time travel
