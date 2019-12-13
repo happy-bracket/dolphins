@@ -31,7 +31,7 @@ fun ChatState.update(mutation: ChatMutation): Pair<ChatState, Set<ChatEffect>> =
   }
 ```
 Here `ChatState` is a core immutable data class, which encodes relevant application state. `ChatMutation` is a subset of types which encode **what** changes your state. Function `update` describes **how** state changes in response to `ChatMutation`. `ChatEffect` then encodes some actions, which are either go-all-round or fire-and-forget. Examples include network requests and database interactions. Notice that those are also pure data classes - the actual activity happens in another entity, called "EffectHandler".
-Then you take a `Feature` constructor of chosen flavor, shove it all in and then you have a complete working entity, which you can mutate and subscribe to its state to update your UI.
+Then you take a `Feature` constructor of chosen flavor, shove it all in and then you have a complete working object, through which you can mutate the state and subscribe to its emission to update your UI.
 
 It's worth noting that nothing of that is platform-dependent and those you can transfer your whole interaction logic between platforms. All you need is to choose appropriate implementation of `Feature`. Although, you'd probably want to adapt the state you get to state that's most convenient to display on your UI. This task is accomplished through middlewares, which are on my roadmap.
 
@@ -40,7 +40,7 @@ Complete sample: https://gist.github.com/happy-bracket/8ca92b70d48d2ab4e2680b4ab
 ## Questions that might come up
 - **What the hell are all those letters in the Feature class?**
 As aforesaid, Dolphins is zero-dependency and highly customizable. All those letters let you choose what type of effects you need in your app, be it rx.Single, rx.Observable or Coroutine Flow. This is possible via a certain trick, called HKT, typeclasses and a little
-alchemy to make it work on JVM (see **KindedJ**, **Arrow Kt**). End-users of the library will not need to be worry about all that, they will be supplied with digestible contract depending on what flavor of library they choose.
+alchemy to make it work on JVM (see **KindedJ**, **Arrow Kt**). End-users of the library will not need to be worry about all that, they will be supplied with digestible contract depending on what flavor of library they choose. For example, see `dolphins.rxjava.feature.RxFeature` in `rxjava` module.
 - **How exactly does flavor switch happen?**
 The switch happens through providing instances for typeclasses, defined in `dolphins.foundation.typeclasses`. Those typeclasses declare basic
 primitive operations that `Observable`-s or `Flow` can do, such as `map`, `flatMap` etc. After that, Dolphins handle the rest.
