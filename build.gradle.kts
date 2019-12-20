@@ -1,23 +1,25 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins {
-    kotlin("jvm") version "1.3.60"
-}
-
-group = "ru.hbracket"
+group = "dolphins"
 version = "0.1.0"
 
-val arrowVersion = "0.10.3"
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
 
-repositories {
-    mavenCentral()
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.60")
+    }
 }
 
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC6")
-}
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    // workaround for https://youtrack.jetbrains.com/issue/KT-27170
+    configurations.create("compileClasspath")
 }
