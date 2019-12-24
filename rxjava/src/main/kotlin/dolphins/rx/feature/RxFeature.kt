@@ -24,8 +24,5 @@ fun <S, M, E> RxFeature(
         initialEffects = initialEffects,
         update = update,
         handler = handler,
-        shift = FlowableShift,
-        consume = FlowableConsume,
-        channel = FlowableChannel,
-        stream = FlowableStream
+        deps = RxDepsBag
     )

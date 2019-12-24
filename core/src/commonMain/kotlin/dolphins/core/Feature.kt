@@ -20,11 +20,8 @@ class Feature<G, D, H : Handle, S, M, E>(
     initialEffects: Set<E>,
     private val update: (S, M) -> Pair<S, Set<E>>,
     private val handler: Handler<G, E, M>,
-    private val channel: Channel<G>,
-    private val shift: Shift<G, D>,
-    private val consume: Consume<G, H>,
-    private val stream: Stream<G>
-) : Channel<G> by channel, Stream<G> by stream, Shift<G, D> by shift, Consume<G, H> by consume {
+    deps: FunDeps<G, D, H>
+) : FunDeps<G, D, H> by deps {
 
     private val stateR = conflated<S>()
     private val mutationR = through<M>()
