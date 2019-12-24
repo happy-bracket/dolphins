@@ -2,14 +2,10 @@ package dolphins.rx.instances.flowable
 
 import dolphins.foundation.Kind
 import dolphins.foundation.typeclasses.Channel
-import dolphins.foundation.typeclasses.Stream
 import dolphins.foundation.types.channel.ChannelVal
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import dolphins.rx.instances.subject.FSubject
-import dolphins.rx.instances.subject.ForSubject
-import dolphins.rx.instances.subject.fix
-import io.reactivex.Observable
 import io.reactivex.subjects.Subject
 
 val FlowableChannel =

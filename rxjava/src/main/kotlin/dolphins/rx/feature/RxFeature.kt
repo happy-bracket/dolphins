@@ -3,8 +3,7 @@ package dolphins.rx.feature
 import dolphins.core.Feature
 import dolphins.core.Handler
 import dolphins.rx.instances.RxHandle
-import dolphins.rx.instances.flowable.*
-import dolphins.rx.instances.subject.ForSubject
+import dolphins.rx.instances.flowable.ForFlowable
 import io.reactivex.Scheduler
 
 typealias RxFeature<S, M, E> =
