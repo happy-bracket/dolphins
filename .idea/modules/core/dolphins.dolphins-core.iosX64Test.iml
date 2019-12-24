@@ -5,9 +5,9 @@
       <configuration version="3" platform="Native " allPlatforms="Native []" useProjectSettings="false" isTestModule="true" externalProjectId=":dolphins-core">
         <dependsOnModuleNames>dolphins-core_commonTest</dependsOnModuleNames>
         <sourceSets>
-          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
           <sourceSet>dolphins.dolphins-core.iosX64Main</sourceSet>
           <sourceSet>dolphins.dolphins-core.commonMain</sourceSet>
+          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <compilerSettings />

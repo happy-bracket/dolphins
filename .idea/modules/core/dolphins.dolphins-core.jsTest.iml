@@ -6,8 +6,8 @@
         <dependsOnModuleNames>dolphins-core_commonTest</dependsOnModuleNames>
         <sourceSets>
           <sourceSet>dolphins.dolphins-core.jsMain</sourceSet>
-          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
           <sourceSet>dolphins.dolphins-core.commonMain</sourceSet>
+          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <testOutputPath>$MODULE_DIR$/../../../core/build/classes/kotlin/js/test/dolphins-core_test.js</testOutputPath>
