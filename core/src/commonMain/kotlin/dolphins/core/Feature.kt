@@ -2,9 +2,6 @@ package dolphins.core
 
 import dolphins.foundation.Kind
 import dolphins.foundation.typeclasses.*
-import dolphins.foundation.types.either.Either
-import dolphins.foundation.types.either.left
-import dolphins.foundation.types.either.right
 
 /**
  * Core class, which implements basically everything.
@@ -15,32 +12,32 @@ import dolphins.foundation.types.either.right
  * @param M - mutations type
  * @param E - effect type
  */
-class Feature<G, D, H : Handle, S, M, E>(
+class Feature<G, D, H : Handle, S, Ev, M, E>(
     initialState: S,
     initialEffects: Set<E>,
-    private val update: (S, M) -> Pair<S, Set<E>>,
-    private val handler: Handler<G, E, M>,
+    private val flow: FeatureFlow<G, Ev, M, S, E>,
     deps: FunDeps<G, D, H>
 ) : FunDeps<G, D, H> by deps {
 
     private val stateR = conflated<S>()
-    private val mutationR = through<M>()
+    private val eventR = through<Ev>()
     private val flowHandle: H // TODO: implement scoping
 
     init {
-        flowHandle = mutationR
+        flowHandle = eventR
             .suspendRead()
+            .flatMap { flow.pre.cofx(it) }
             .shiftTo(computation())
             .scan(initialState to initialEffects) { (state, _), m ->
-                update(state, m)
+                flow.update(state, m)
             }.flatMap { (state, effects) ->
                 pair(stateR.write(state), just(effects))
             }.fmap { (_, effects) -> effects }
             .consume { effects ->
-                effects.map(handler::handle)
+                effects.map(flow.handler::handle)
                     .forEach { future ->
                         future.flatMap {
-                            mutationR.write(it)
+                            eventR.write(it)
                         }.consume {} // TODO: implement scoping
                     }
             }
@@ -49,8 +46,8 @@ class Feature<G, D, H : Handle, S, M, E>(
     /**
      * Method used to trigger state update
      */
-    fun mutate(mutation: M) {
-        mutationR.write(mutation)
+    fun accept(event: Ev) {
+        eventR.write(event)
             .consume {} // TODO: implement scoping
     }
 
@@ -59,11 +56,5 @@ class Feature<G, D, H : Handle, S, M, E>(
      */
     fun state(): Kind<G, S> =
         stateR.suspendRead()
-
-}
-
-interface Handler<F, in E, out M> : Monad<F> {
-
-    fun handle(e: E): Kind<F, M>
 
 }
