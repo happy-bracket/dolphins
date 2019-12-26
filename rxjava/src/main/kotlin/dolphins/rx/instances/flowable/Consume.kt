@@ -19,3 +19,4 @@ class RxHandle(val disposable: Disposable) : Handle<ForFlowable> {
     }
 }
 
+fun Handle<ForFlowable>.fix() = (this as RxHandle).disposable
