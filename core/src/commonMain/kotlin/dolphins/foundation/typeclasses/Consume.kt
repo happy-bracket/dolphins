@@ -5,13 +5,13 @@ import dolphins.foundation.Kind
 /**
  * Describes imperative consumption of a delayed computation, with a handle of type [H] to cancel it
  */
-interface Consume<F, H : Handle> {
+interface Consume<F> {
 
-    fun <A> Kind<F, A>.consume(f: (A) -> Unit): H
+    fun <A> Kind<F, A>.consume(f: (A) -> Unit): Handle<F>
 
 }
 
-interface Handle {
+interface Handle<F> {
 
     fun release()
 
