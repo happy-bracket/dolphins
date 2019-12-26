@@ -20,7 +20,7 @@ class Feature<G, S, M, E>(
 
     private val stateR = conflated<S>()
     private val mutationR = through<M>()
-    private val flowHandle: Handle<G> // TODO: implement scoping
+    private val flowHandle: Handle<G>
 
     init {
         flowHandle = mutationR
@@ -36,7 +36,7 @@ class Feature<G, S, M, E>(
                     .forEach { future ->
                         future.flatMap {
                             mutationR.write(it)
-                        }.consume {} // TODO: implement scoping
+                        }.consume {}
                     }
             }
     }
@@ -44,16 +44,19 @@ class Feature<G, S, M, E>(
     /**
      * Method used to trigger state update
      */
-    fun mutate(mutation: M) {
+    fun mutate(mutation: M): Handle<G> =
         mutationR.write(mutation)
-            .consume {} // TODO: implement scoping
-    }
+            .consume {}
 
     /**
      * @return stream of states
      */
     fun state(): Kind<G, S> =
         stateR.suspendRead()
+
+    fun kill() {
+        flowHandle.release()
+    }
 
 }
 
