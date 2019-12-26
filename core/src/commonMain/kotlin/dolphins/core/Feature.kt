@@ -10,55 +10,52 @@ import dolphins.foundation.typeclasses.*
  * @param M - mutations type
  * @param E - effect type
  */
-class Feature<G, S, M, E>(
-    initialState: S,
-    initialEffects: Set<E>,
-    private val update: (S, M) -> Pair<S, Set<E>>,
-    private val handler: Handler<G, E, M>,
-    deps: FunDeps<G>
+class Feature<G, S, V, Ev, M, E>(
+    deps: FunDeps<G>,
+    core: Core<S, M, E>,
+    private val cofx: Handler<G, Ev, M>,
+    private val handler: Handler<G, E, Ev>
 ) : FunDeps<G> by deps {
 
     private val stateR = conflated<S>()
-    private val mutationR = through<M>()
+    private val eventR = through<Ev>()
     private val flowHandle: Handle<G>
 
     init {
-        flowHandle = mutationR
+        flowHandle = eventR
             .suspendRead()
+            .shiftTo(io())
+            .flatMap { event -> cofx.handle(event) }
             .shiftTo(computation())
-            .scan(initialState to initialEffects) { (state, _), m ->
-                update(state, m)
+            .scan(core.initialState to core.initialEffects) { (state, _), m ->
+                core.update(state, m)
             }.flatMap { (state, effects) ->
                 pair(stateR.write(state), just(effects))
             }.fmap { (_, effects) -> effects }
+            .shiftTo(io())
             .flatMap { effs ->
                 merge(effs.map(handler::handle))
             }.flatMap { m ->
-                mutationR.write(m)
+                eventR.write(m)
             }.consume {}
     }
 
     /**
      * Method used to trigger state update
      */
-    fun mutate(mutation: M): Handle<G> =
-        mutationR.write(mutation)
+    fun mutate(event: Ev): Handle<G> =
+        eventR.write(event)
             .consume {}
 
     /**
-     * @return stream of states
+     * @return stream of views
      */
-    fun state(): Kind<G, S> =
+    fun select(view: (S) -> V): Kind<G, V> =
         stateR.suspendRead()
+            .fmap(view)
 
     fun kill() {
         flowHandle.release()
     }
-
-}
-
-interface Handler<F, in E, out M> {
-
-    fun handle(e: E): Kind<F, M>
 
 }
