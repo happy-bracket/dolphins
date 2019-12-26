@@ -31,14 +31,11 @@ class Feature<G, S, M, E>(
             }.flatMap { (state, effects) ->
                 pair(stateR.write(state), just(effects))
             }.fmap { (_, effects) -> effects }
-            .consume { effects ->
-                effects.map(handler::handle)
-                    .forEach { future ->
-                        future.flatMap {
-                            mutationR.write(it)
-                        }.consume {}
-                    }
-            }
+            .flatMap { effs ->
+                merge(effs.map(handler::handle))
+            }.flatMap { m ->
+                mutationR.write(m)
+            }.consume {}
     }
 
     /**
