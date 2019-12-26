@@ -9,19 +9,18 @@ import dolphins.foundation.types.either.right
 /**
  * Core class, which implements basically everything.
  * @param G - stream type
- * @param D - type of dispatcher entity associated with [G]
  * @param H - type of subscription handle, associated with [G]
  * @param S - state type
  * @param M - mutations type
  * @param E - effect type
  */
-class Feature<G, D, H : Handle, S, M, E>(
+class Feature<G, H : Handle, S, M, E>(
     initialState: S,
     initialEffects: Set<E>,
     private val update: (S, M) -> Pair<S, Set<E>>,
     private val handler: Handler<G, E, M>,
-    deps: FunDeps<G, D, H>
-) : FunDeps<G, D, H> by deps {
+    deps: FunDeps<G, H>
+) : FunDeps<G, H> by deps {
 
     private val stateR = conflated<S>()
     private val mutationR = through<M>()
