@@ -1,5 +1,8 @@
 package dolphins.core
 
+import dolphins.foundation.Kind
+import dolphins.foundation.functions.self
+
 typealias MonoFeature<F, S, M, E> = Feature<F, S, S, M, M, E>
 
 fun <F, S, M, E> MonoFeature(
@@ -13,3 +16,6 @@ fun <F, S, M, E> MonoFeature(
         IdentityCofx(deps),
         handler
     )
+
+fun <F, S> MonoFeature<F, S, *, *>.state(): Kind<F, S> =
+    select(::self)

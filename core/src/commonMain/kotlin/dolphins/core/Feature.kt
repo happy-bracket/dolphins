@@ -7,6 +7,8 @@ import dolphins.foundation.typeclasses.*
  * Core class, which implements basically everything.
  * @param G - stream type
  * @param S - state type
+ * @param V - state view type, to which state will be mapped
+ * @param Ev - event type, which may obtain coeffects and be mapped to [M]
  * @param M - mutations type
  * @param E - effect type
  */
