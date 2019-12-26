@@ -2,9 +2,6 @@ package dolphins.core
 
 import dolphins.foundation.Kind
 import dolphins.foundation.typeclasses.*
-import dolphins.foundation.types.either.Either
-import dolphins.foundation.types.either.left
-import dolphins.foundation.types.either.right
 
 /**
  * Core class, which implements basically everything.
