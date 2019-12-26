@@ -60,7 +60,7 @@ class Feature<G, S, M, E>(
 
 }
 
-interface Handler<F, in E, out M> : Monad<F> {
+interface Handler<F, in E, out M> {
 
     fun handle(e: E): Kind<F, M>
 
