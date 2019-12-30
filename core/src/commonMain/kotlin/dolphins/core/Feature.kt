@@ -1,86 +1,61 @@
 package dolphins.core
 
 import dolphins.foundation.Kind
-import dolphins.foundation.typeclasses.Consume
-import dolphins.foundation.typeclasses.Handle
-import dolphins.foundation.typeclasses.Rendezvous
-import dolphins.foundation.typeclasses.Shift
-import dolphins.foundation.types.either.Either
-import dolphins.foundation.types.either.left
-import dolphins.foundation.types.either.right
+import dolphins.foundation.typeclasses.*
 
 /**
  * Core class, which implements basically everything.
  * @param G - stream type
- * @param R - type of synchronization point, naturally associated with [G]
- * @param D - type of dispatcher entity associated with [G]
- * @param H - type of subscription handle, associated with [G]
  * @param S - state type
+ * @param Ev - event type, which may obtain coeffects and be mapped to [M]
  * @param M - mutations type
  * @param E - effect type
- * @param A - action type
  */
-class Feature<G, R, D, H : Handle, S, M, E, A>(
-    initialState: S,
-    initialEffects: Set<E>,
-    private val update: (S, M) -> Pair<S, Set<E>>,
-    private val handler: Handler<E, M, A>,
-    private val rendezvous: Rendezvous<G, R>,
-    private val shift: Shift<G, D>,
-    private val consume: Consume<G, H>
-) : Rendezvous<G, R> by rendezvous, Shift<G, D> by shift, Consume<G, H> by consume {
+class Feature<G, S, Ev, M, E>(
+    deps: FunDeps<G>,
+    core: Core<S, M, E>,
+    private val cofx: Handler<G, Ev, M>,
+    private val handler: Handler<G, E, Ev>
+) : FunDeps<G> by deps {
 
     private val stateR = conflated<S>()
-    private val actionR = through<A>()
-    private val mutationR = through<M>()
-    private val flowHandle: H
+    private val eventR = through<Ev>()
+    private val flowHandle: Handle<G>
 
     init {
-        flowHandle = mutationR
-            .publish()
+        flowHandle = eventR
+            .suspendRead()
+            .shiftTo(io())
+            .flatMap { event -> cofx.handle(event) }
             .shiftTo(computation())
-            .scan(initialState to initialEffects) { (state, _), m ->
-                update(state, m)
-            }.consume { (state, effects) ->
-                stateR.push(state)
-                effects.forEach { effect ->
-                    handler.handle(effect, ::mutate) { actionR.push(it) }
-                }
-            }
+            .scan(core.initialState to core.initialEffects) { (state, _), m ->
+                core.update(state, m)
+            }.flatMap { (state, effects) ->
+                pair(stateR.write(state), just(effects))
+            }.fmap { (_, effects) -> effects }
+            .shiftTo(io())
+            .flatMap { effs ->
+                merge(effs.map(handler::handle))
+            }.flatMap { m ->
+                eventR.write(m)
+            }.consume {}
     }
 
     /**
      * Method used to trigger state update
      */
-    fun mutate(mutation: M) {
-        mutationR.push(mutation)
-    }
-
-    /**
-     * @return stream of states and actions
-     */
-    fun updates(): Kind<G, Either<S, A>> =
-        merge(
-            state().fmap { state -> state.left() },
-            actions().fmap { action -> action.right() }
-        )
+    fun mutate(event: Ev): Handle<G> =
+        eventR.write(event)
+            .consume {}
 
     /**
      * @return stream of states
      */
     fun state(): Kind<G, S> =
-        stateR.publish()
+        stateR.suspendRead()
 
-    /**
-     * @return stream of actions
-     */
-    fun actions(): Kind<G, A> =
-        actionR.publish()
-
-}
-
-interface Handler<in E, out M, out A> {
-
-    fun handle(e: E, msink: (M) -> Unit, asink: (A) -> Unit)
+    fun kill() {
+        flowHandle.release()
+    }
 
 }

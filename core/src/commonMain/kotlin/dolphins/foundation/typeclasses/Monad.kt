@@ -2,7 +2,7 @@ package dolphins.foundation.typeclasses
 
 import dolphins.foundation.Kind
 
-interface Monad<F> : Functor<F> {
+interface Monad<F> : Applicative<F> {
 
     fun <A> just(value: A): Kind<F, A>
 

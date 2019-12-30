@@ -6,8 +6,8 @@
         <dependsOnModuleNames>dolphins-core_commonTest</dependsOnModuleNames>
         <sourceSets>
           <sourceSet>dolphins.dolphins-core.jvmMain</sourceSet>
-          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
           <sourceSet>dolphins.dolphins-core.commonMain</sourceSet>
+          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <externalSystemTestTasks>jvmTest|:dolphins-core:jvmTest|jvm</externalSystemTestTasks>
@@ -16,7 +16,7 @@
         </compilerSettings>
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/../../../core/build/classes/kotlin/jvm/test" />
-          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.60/538bd29b2d5a7d278a7188f89c3b84183fa37f75/kotlin-stdlib-common-1.3.60.jar;C:/Users/miralace/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-common/1.3.60/c02b92fd2d3de4baa8b66e18ab24e7196f3f337/kotlin-test-common-1.3.60.jar;C:/Users/miralace/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-annotations-common/1.3.60/accf68f7dae79910118f63e7eadeadc7e3105c82/kotlin-test-annotations-common-1.3.60.jar" />
+          <option name="classpath" value="$MODULE_DIR$/../../../core/build/classes/kotlin/jvm/main;C:/Users/miralace/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.60/538bd29b2d5a7d278a7188f89c3b84183fa37f75/kotlin-stdlib-common-1.3.60.jar;C:/Users/miralace/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-common/1.3.60/c02b92fd2d3de4baa8b66e18ab24e7196f3f337/kotlin-test-common-1.3.60.jar;C:/Users/miralace/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-annotations-common/1.3.60/accf68f7dae79910118f63e7eadeadc7e3105c82/kotlin-test-annotations-common-1.3.60.jar" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="dolphins-core" />

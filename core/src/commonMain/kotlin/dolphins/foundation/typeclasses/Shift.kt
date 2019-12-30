@@ -4,18 +4,19 @@ import dolphins.foundation.Kind
 
 /**
  * For concurrent primitives, provides ways to change execution context.
- * [D] is the type of context. For RxJava it will be `io.reactivex.Scheduler`, for coroutines - Dispatcher
  */
-interface Shift<F, D> {
+interface Shift<F> {
 
-    fun io(): D
-    fun computation(): D
-    fun <A> Kind<F, A>.shiftTo(dispatcher: D): Kind<F, A>
+    fun io(): ExecContext<F>
+    fun computation(): ExecContext<F>
+    fun <A> Kind<F, A>.shiftTo(execContext: ExecContext<F>): Kind<F, A>
+
+}
+
+interface UiShift<F> : Shift<F> {
+
+    fun main(): ExecContext<F>
 
 }
 
-interface UiShift<F, D> : Shift<F, D> {
-
-    fun main(): D
-
-}
+interface ExecContext<F>

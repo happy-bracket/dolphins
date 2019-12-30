@@ -13,4 +13,8 @@ interface Stream<F> : Monad<F> {
         vararg ss: Kind<F, A>
     ) : Kind<F, A>
 
+    fun <A> merge(
+        ss: List<Kind<F, A>>
+    ): Kind<F, A>
+
 }

@@ -6,8 +6,8 @@
         <dependsOnModuleNames>dolphins-core_commonTest</dependsOnModuleNames>
         <sourceSets>
           <sourceSet>dolphins.dolphins-core.iosArm64Main</sourceSet>
-          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
           <sourceSet>dolphins.dolphins-core.commonMain</sourceSet>
+          <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <compilerSettings />

@@ -1,14 +1,10 @@
 package dolphins.rx.feature
 
-import dolphins.foundation.types.either.Either
-import dolphins.rx.instances.flowable.fix
-import io.reactivex.Observable
+import dolphins.rx.types.fix
+import io.reactivex.disposables.Disposable
 
-fun <S> RxFeature<S, *, *, *>.rxState(): Observable<S> =
+fun <Ev> RxFeature<*, Ev, *, *>.rxMutate(event: Ev): Disposable =
+    mutate(event).fix()
+
+fun <S> RxFeature<S, *, *, *>.rxState() =
     state().fix()
-
-fun <A> RxFeature<*, *, *, A>.rxActions(): Observable<A> =
-    actions().fix()
-
-fun <S, A> RxFeature<S, *, *, A>.rxUpdates(): Observable<Either<S, A>> =
-    updates().fix()
