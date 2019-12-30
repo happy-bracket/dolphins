@@ -2,21 +2,18 @@ package dolphins.rx.instances.flowable
 
 import dolphins.foundation.Kind
 import dolphins.foundation.typeclasses.Consume
-import dolphins.foundation.typeclasses.Handle
-import io.reactivex.disposables.Disposable
+import dolphins.rx.types.ForRx
+import dolphins.rx.types.Rx
+import dolphins.rx.types.RxHandle
+import dolphins.rx.types.fix
 
-val FlowableConsume: Consume<ForFlowable> =
-    object : Consume<ForFlowable> {
+private val RxConsumeInstance: Consume<ForRx> =
+    object : Consume<ForRx> {
 
-        override fun <A> Kind<ForFlowable, A>.consume(f: (A) -> Unit): RxHandle =
+        override fun <A> Kind<ForRx, A>.consume(f: (A) -> Unit): RxHandle =
             RxHandle(fix().subscribe(f))
 
     }
 
-class RxHandle(val disposable: Disposable) : Handle<ForFlowable> {
-    override fun release() {
-        disposable.dispose()
-    }
-}
-
-fun Handle<ForFlowable>.fix() = (this as RxHandle).disposable
+val Rx.Companion.Consume
+    get() = RxConsumeInstance

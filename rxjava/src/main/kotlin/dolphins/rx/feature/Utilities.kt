@@ -1,6 +1,6 @@
 package dolphins.rx.feature
 
-import dolphins.rx.instances.flowable.fix
+import dolphins.rx.types.fix
 import io.reactivex.disposables.Disposable
 
 fun <Ev> RxFeature<*, Ev, *, *>.rxMutate(event: Ev): Disposable =

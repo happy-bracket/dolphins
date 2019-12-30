@@ -3,23 +3,22 @@ package dolphins.rx.instances.flowable
 import dolphins.foundation.Kind
 import dolphins.foundation.typeclasses.ExecContext
 import dolphins.foundation.typeclasses.Shift
-import io.reactivex.Scheduler
+import dolphins.rx.types.*
 import io.reactivex.schedulers.Schedulers
 
-val FlowableShift: Shift<ForFlowable> =
-    object : Shift<ForFlowable> {
+private val RxShiftInstance: Shift<ForRx> =
+    object : Shift<ForRx> {
 
-        override fun computation(): ExecContext<ForFlowable> =
+        override fun computation(): ExecContext<ForRx> =
             RxContext(Schedulers.computation())
 
-        override fun io(): ExecContext<ForFlowable> =
+        override fun io(): ExecContext<ForRx> =
             RxContext(Schedulers.io())
 
-        override fun <A> Kind<ForFlowable, A>.shiftTo(execContext: ExecContext<ForFlowable>): Kind<ForFlowable, A> =
+        override fun <A> Kind<ForRx, A>.shiftTo(execContext: ExecContext<ForRx>): Kind<ForRx, A> =
             fix().observeOn(execContext.fix()).unfix()
 
     }
 
-class RxContext(val scheduler: Scheduler) : ExecContext<ForFlowable>
-
-fun ExecContext<ForFlowable>.fix() = (this as RxContext).scheduler
+val Rx.Companion.Shift
+    get() = RxShiftInstance
