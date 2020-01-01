@@ -17,4 +17,6 @@ interface Stream<F> : Monad<F> {
         ss: List<Kind<F, A>>
     ): Kind<F, A>
 
+    fun <A> Kind<F, A>.take(number: Int): Kind<F, A>
+
 }

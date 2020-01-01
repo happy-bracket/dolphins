@@ -18,24 +18,33 @@ class Feature<G, S, Ev, M, E>(
     private val handler: Handler<G, E, Ev>
 ) : FunDeps<G> by deps {
 
-    private val stateR = conflated<S>()
+    private val stateR = conflated(core.initialState)
+    private val effectR = through<Set<E>>()
     private val eventR = through<Ev>()
+
     private val flowHandle: Handle<G>
+    private val effectHandle: Handle<G>
 
     init {
         flowHandle = eventR
             .suspendRead()
             .shiftTo(io())
             .flatMap { event -> cofx.handle(event) }
+            .flatMap { pair(stateR.suspendRead().take(1), just(it)) }
             .shiftTo(computation())
-            .scan(core.initialState to core.initialEffects) { (state, _), m ->
-                core.update(state, m)
-            }.flatMap { (state, effects) ->
+            .fmap { (state, mutation) -> core.update(state, mutation) }
+            .flatMap { (state, effects) ->
                 pair(stateR.write(state), just(effects))
             }.fmap { (_, effects) -> effects }
+            .flatMap { effects ->
+                effectR.write(effects)
+            }.consume {}
+
+        effectHandle = effectR
+            .suspendRead()
             .shiftTo(io())
-            .flatMap { effs ->
-                merge(effs.map(handler::handle))
+            .flatMap { effects ->
+                merge(effects.map(handler::handle))
             }.flatMap { m ->
                 eventR.write(m)
             }.consume {}
