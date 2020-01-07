@@ -5,8 +5,8 @@ import dolphins.foundation.typeclasses.*
 
 /**
  * Core class, which implements basically everything.
- * On creation, it launches controllable loop of receiving events of type [Ev], transforming it into
- * mutations of type [M] (possibly with side-effects) and then emitting a new state of type [S] to all subscribers.
+ * On creation, it launches controllable loop of receiving events of type [Ev] through [mutate], transforming it into
+ * mutations of type [M] (possibly with side-effects) and then emitting a new state of type [S] to all subscribers of [state].
  * The feature can be disposed of, if required, by invoking the [kill] method.
  * @param G an HKT of the underlying async library
  * @param S state type
@@ -37,7 +37,7 @@ class Feature<G, S, Ev, M, E>(
         flowHandle = eventR
             .suspendRead()
             .shiftTo(io())
-            .flatMap { event -> coeffectHandler.handle(event) }
+            .flatMap { event -> coeffectHandler.kindfulHandle(event) }
             .flatMap { pair(stateR.suspendRead().take(1), just(it)) }
             .shiftTo(computation())
             .fmap { (state, mutation) -> core.update(state, mutation) }
@@ -52,7 +52,7 @@ class Feature<G, S, Ev, M, E>(
             .suspendRead()
             .shiftTo(io())
             .flatMap { effects ->
-                merge(effects.map(effectHandler::handle))
+                merge(effects.map(effectHandler::kindfulHandle))
             }.flatMap { m ->
                 eventR.write(m)
             }.consume {}
