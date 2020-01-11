@@ -14,6 +14,9 @@ private val RxChannelInstance =
         override fun <A> conflated(): ChannelVal<ForRx, A> =
             RxChannel(BehaviorSubject.create())
 
+        override fun <A> conflated(default: A): ChannelVal<ForRx, A> =
+            RxChannel(BehaviorSubject.createDefault(default))
+
         override fun <A> through(): ChannelVal<ForRx, A> =
             RxChannel(PublishSubject.create())
 

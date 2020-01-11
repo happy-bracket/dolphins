@@ -12,3 +12,5 @@ class Rx<A>(val flow: Observable<A>) : RxOf<A> {
 
 fun <A> RxOf<A>.fix() = (this as Rx<A>).flow
 fun <A> Observable<A>.unfix() = Rx(this)
+fun <A, B> RxOf<A>.fixed(f: Observable<A>.() -> Observable<B>): RxOf<B> =
+    fix().let(f).unfix()
