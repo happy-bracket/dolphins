@@ -26,29 +26,40 @@ class Feature<F, St, Ev, Mu, Ef>(
     private val effectHandler: Handler<F, Ef, Ev>
 ) : FunDeps<F> by deps {
 
+    private val eventChannel = through<Ev>()
+    private val mutationChannel = through<Mu>()
     private val stateChannel = conflated(core.initialState)
     private val effectChannel = through<Set<Ef>>()
-    private val eventChannel = through<Ev>()
 
     private val flowHandle: Handle<F>
-    private val effectHandle: Handle<F>
 
     init {
         flowHandle = eventChannel
             .suspendRead()
             .shiftTo(io())
             .flatMap { event -> coeffectHandler.kindfulHandle(event) }
-            .flatMap { pair(stateChannel.suspendRead().take(1), just(it)) }
-            .shiftTo(computation())
-            .fmap { (state, mutation) -> core.update(state, mutation) }
-            .flatMap { (state, effects) ->
-                pair(stateChannel.write(state), just(effects))
-            }.fmap { (_, effects) -> effects }
-            .flatMap { effects ->
-                effectChannel.write(effects)
+            .flatMap { mutationChannel.write(it) }
+            .consume {}
+
+        mutationChannel
+            .suspendRead()
+            .shiftTo(io())
+            .flatMap { mutation ->
+                pair(
+                    stateChannel.suspendRead().take(1),
+                    just(mutation)
+                )
+            }.shiftTo(computation())
+            .fmap { (state, mutation) ->
+                core.update(state, mutation)
+            }.flatMap { (state, effects) ->
+                pair(
+                    stateChannel.write(state),
+                    effectChannel.write(effects)
+                )
             }.consume {}
 
-        effectHandle = effectChannel
+        effectChannel
             .suspendRead()
             .shiftTo(io())
             .flatMap { effects ->
