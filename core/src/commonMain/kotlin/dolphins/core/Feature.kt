@@ -6,32 +6,32 @@ import dolphins.foundation.typeclasses.*
 /**
  * Core class, which implements basically everything.
  * On creation, it launches controllable loop of receiving events of type [Ev] through [mutate], transforming it into
- * mutations of type [M] (possibly with side-effects) and then emitting a new state of type [S] to all subscribers of [state].
+ * mutations of type [Mu] (possibly with side-effects) and then emitting a new state of type [St] to all subscribers of [state].
  * The feature can be disposed of, if required, by invoking the [kill] method.
- * @param G an HKT of the underlying async library
- * @param S state type
- * @param Ev event type, which passes through coeffect handler and is mapped to [M]
- * @param M mutations type, used in update
- * @param E effect type
+ * @param F an HKT of the underlying async library
+ * @param St state type
+ * @param Ev event type, which passes through coeffect handler and is mapped to [Mu]
+ * @param Mu mutations type, used in update
+ * @param Ef effect type
  * @param deps pack of functional dependencies (typeclasses instances)
  * @param core pack of pure stuff: initial values and an update function
- * @param coeffectHandler transformer from [Ev] to [M]. It may perform side-effects
- * @param effectHandler interprets effects of type [E], returned from update, mapping them to actual side-effects
+ * @param coeffectHandler transformer from [Ev] to [Mu]. It may perform side-effects
+ * @param effectHandler interprets effects of type [Ef], returned from update, mapping them to actual side-effects
  * and returning resulting event [Ev] back into the loop
  */
-class Feature<G, S, Ev, M, E>(
-    deps: FunDeps<G>,
-    core: Core<S, M, E>,
-    private val coeffectHandler: Handler<G, Ev, M>,
-    private val effectHandler: Handler<G, E, Ev>
-) : FunDeps<G> by deps {
+class Feature<F, St, Ev, Mu, Ef>(
+    deps: FunDeps<F>,
+    core: Core<St, Mu, Ef>,
+    private val coeffectHandler: Handler<F, Ev, Mu>,
+    private val effectHandler: Handler<F, Ef, Ev>
+) : FunDeps<F> by deps {
 
     private val stateR = conflated(core.initialState)
-    private val effectR = through<Set<E>>()
+    private val effectR = through<Set<Ef>>()
     private val eventR = through<Ev>()
 
-    private val flowHandle: Handle<G>
-    private val effectHandle: Handle<G>
+    private val flowHandle: Handle<F>
+    private val effectHandle: Handle<F>
 
     init {
         flowHandle = eventR
@@ -61,14 +61,14 @@ class Feature<G, S, Ev, M, E>(
     /**
      * Method used to trigger state update
      */
-    fun mutate(event: Ev): Handle<G> =
+    fun mutate(event: Ev): Handle<F> =
         eventR.write(event)
             .consume {}
 
     /**
      * @return stream of states
      */
-    fun state(): Kind<G, S> =
+    fun state(): Kind<F, St> =
         stateR.suspendRead()
 
     /**
