@@ -26,35 +26,35 @@ class Feature<F, St, Ev, Mu, Ef>(
     private val effectHandler: Handler<F, Ef, Ev>
 ) : FunDeps<F> by deps {
 
-    private val stateR = conflated(core.initialState)
-    private val effectR = through<Set<Ef>>()
-    private val eventR = through<Ev>()
+    private val stateChannel = conflated(core.initialState)
+    private val effectChannel = through<Set<Ef>>()
+    private val eventChannel = through<Ev>()
 
     private val flowHandle: Handle<F>
     private val effectHandle: Handle<F>
 
     init {
-        flowHandle = eventR
+        flowHandle = eventChannel
             .suspendRead()
             .shiftTo(io())
             .flatMap { event -> coeffectHandler.kindfulHandle(event) }
-            .flatMap { pair(stateR.suspendRead().take(1), just(it)) }
+            .flatMap { pair(stateChannel.suspendRead().take(1), just(it)) }
             .shiftTo(computation())
             .fmap { (state, mutation) -> core.update(state, mutation) }
             .flatMap { (state, effects) ->
-                pair(stateR.write(state), just(effects))
+                pair(stateChannel.write(state), just(effects))
             }.fmap { (_, effects) -> effects }
             .flatMap { effects ->
-                effectR.write(effects)
+                effectChannel.write(effects)
             }.consume {}
 
-        effectHandle = effectR
+        effectHandle = effectChannel
             .suspendRead()
             .shiftTo(io())
             .flatMap { effects ->
                 merge(effects.map(effectHandler::kindfulHandle))
             }.flatMap { m ->
-                eventR.write(m)
+                eventChannel.write(m)
             }.consume {}
     }
 
@@ -62,14 +62,14 @@ class Feature<F, St, Ev, Mu, Ef>(
      * Method used to trigger state update
      */
     fun mutate(event: Ev): Handle<F> =
-        eventR.write(event)
+        eventChannel.write(event)
             .consume {}
 
     /**
      * @return stream of states
      */
     fun state(): Kind<F, St> =
-        stateR.suspendRead()
+        stateChannel.suspendRead()
 
     /**
      * Ends life of the feature, stopping any updates and disposing of feature lifecycle scope
