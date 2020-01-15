@@ -3,7 +3,7 @@ package dolphins.rx.feature
 import dolphins.core.Core
 import dolphins.core.Feature
 import dolphins.core.Handler
-import dolphins.core.IdentityCofx
+import dolphins.core.Identity
 import dolphins.rx.types.ForRx
 
 typealias RxFeature<S, Ev, M, E> = Feature<ForRx, S, Ev, M, E>
@@ -27,6 +27,6 @@ fun <S, M, E> RxMonoFeature(
 ): RxMonoFeature<S, M, E> =
     RxFeature(
         core,
-        IdentityCofx(RxDepBag),
+        Identity(RxDepBag),
         effects
     )

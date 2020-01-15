@@ -35,7 +35,7 @@ fun <F, E, M1, M2> Handler<F, E, M1>.postMap(handler: Handler<F, M1, M2>): Handl
             }
     }
 
-class IdentityCofx<F, M>(funDeps: FunDeps<F>) : Handler<F, M, M>, FunDeps<F> by funDeps {
+class Identity<F, M>(funDeps: FunDeps<F>) : Handler<F, M, M>, FunDeps<F> by funDeps {
 
     override fun kindfulHandle(e: M): Kind<F, M> =
         just(e)

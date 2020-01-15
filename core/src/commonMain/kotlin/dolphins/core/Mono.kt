@@ -10,6 +10,6 @@ fun <F, S, M, E> MonoFeature(
     Feature(
         deps,
         core,
-        IdentityCofx(deps),
+        Identity(deps),
         handler
     )
