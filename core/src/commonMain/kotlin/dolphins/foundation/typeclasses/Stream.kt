@@ -3,7 +3,8 @@ package dolphins.foundation.typeclasses
 import dolphins.foundation.Kind
 
 /**
- * Represents pull/push computed stream of values.
+ * Identifies that [F], being a monad, can produce more than one value and thus different instances of `F<_>`
+ * can be composed accordingly.
  */
 interface Stream<F> : Monad<F> {
 
