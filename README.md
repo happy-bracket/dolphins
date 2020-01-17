@@ -33,20 +33,19 @@ fun ChatState.update(mutation: ChatMutation): Pair<ChatState, Set<ChatEffect>> =
 Here `ChatState` is a core immutable data class, which encodes relevant application state. `ChatMutation` is a subset of types which encode **what** changes your state. Function `update` describes **how** state changes in response to `ChatMutation`. `ChatEffect` then encodes some actions, which are either go-all-round or fire-and-forget. Examples include network requests and database interactions. Notice that those are also pure data classes - the actual activity happens in another entity, called "EffectHandler".
 Then you take a `Feature` constructor of chosen flavor, shove it all in and then you have a complete working object, through which you can mutate the state and subscribe to its emission to update your UI.
 
-It's worth noting that nothing of that is platform-dependent and those you can transfer your whole interaction logic between platforms. All you need is to choose appropriate implementation of `Feature`. Although, you'd probably want to adapt the state you get to state that's most convenient to display on your UI. This task is accomplished through middlewares, which are on my roadmap.
+It's worth noting that nothing of that is platform-dependent and thus you can transfer your whole interaction logic between platforms. All you need is to choose appropriate implementation of `Feature`. Although, you'd probably want to adapt the state you get to state that's most convenient to display on your UI.
 
 Complete sample: https://gist.github.com/happy-bracket/8ca92b70d48d2ab4e2680b4ab318061c
 
-## Questions that might come up
-- **What the hell are all those letters in the Feature class?**
-As aforesaid, Dolphins is zero-dependency and highly customizable. All those letters let you choose what type of effects you need in your app, be it rx.Single, rx.Observable or Coroutine Flow. This is possible via a certain trick, called HKT, typeclasses and a little
-alchemy to make it work on JVM (see **KindedJ**, **Arrow Kt**). End-users of the library will not need to be worry about all that, they will be supplied with digestible contract depending on what flavor of library they choose. For example, see `dolphins.rxjava.feature.RxFeature` in `rxjava` module.
-- **How exactly does flavor switch happen?**
-The switch happens through providing instances for typeclasses, defined in `dolphins.foundation.typeclasses`. Those typeclasses declare basic
-primitive operations that `Observable`-s or `Flow` can do, such as `map`, `flatMap` etc. After that, Dolphins handle the rest.
-- **Is it bound to Android only?**
-No. You can use Dolphins in Web, Desktop and iOS, it only needs that you provide concurrent primitives for that platform.
-Most popular choices (Rx*, Coroutines) are planned to be provided by default.
+## Features of 🐬 Dolphins
+### Unopinionated
+Usually we employ a certain set of libraries and patterns to write UI code. It might be reactivity along with RxJava, reactivity through MVVM with Lychee or LiveData. It especially varies among other platforms, where there's React or Angular or something else in Web, RxSwift on iOS and JavaFX with its own databinding on Desktop.
+
+Well, Dolphins can handle most of that. Through a certain feature of type system called **HKT** (a lot of examples can be seen in arrow-kt.io), which abstracts over the type of effect. So, with a little effort (or no effort at all, depending on whether your favorite library is supported out-of-the-box), Your `Feature` can return `Observable<State>`, `Flow<State>` or you can even simply put a listener on it.
+### Extensible
+With middlewares (`dolphins.core.Fin`) you can polymorphically add new behaviors to `Feature`-s, such as logging, debugging mocks (or stubs, or fakes), time-travel and practically anything you want.
+### Effectful
+Handlers presented in Dolphins allow you to process effects separately from your actual pure business- or UI-logic. They are composable, such that you can create chains of Handlers with different types (proficient FP developers might recognize Kleisli arrows here - yes, exactly). Going further - you get Coeffect Handlers, which allow you to reduce the number of effects by pre-composing `update`. Samples to see how great it is will be out soon.
 
 ## What is Dolphins in the long run?
 It is in very early stage and highly depends on my ability or wish to develop it.
@@ -55,7 +54,6 @@ Planned features:
 - Time travel
 - Logging
 - Debugging utils
-- Middlewares (hard to tell yet, how they will be implemented)
 - Testing utils
 - Predefined effects for networking and database
 
