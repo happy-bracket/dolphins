@@ -22,8 +22,9 @@ import dolphins.foundation.typeclasses.*
 class Feature<F, St, Ev, Mu, Ef>(
     deps: FunDeps<F>,
     core: Core<St, Mu, Ef>,
-    private val coeffectHandler: Handler<F, Ev, Mu>,
-    private val effectHandler: Handler<F, Ef, Ev>
+    coeffectHandler: Handler<F, Ev, Mu>,
+    effectHandler: Handler<F, Ef, Ev>,
+    fins: List<Fin<F, St, Ev, Mu, Ef>> = emptyList()
 ) : FunDeps<F> by deps {
 
     private val eventChannel = through<Ev>()
@@ -34,39 +35,54 @@ class Feature<F, St, Ev, Mu, Ef>(
     private val flowHandle: Handle<F>
 
     init {
-        flowHandle = eventChannel
-            .suspendRead()
-            .shiftTo(io())
-            .flatMap { event -> coeffectHandler.kindfulHandle(event) }
-            .flatMap { mutationChannel.write(it) }
-            .consume {}
+        val struct = Structure(
+            deps, core,
+            coeffectHandler, effectHandler,
+            eventChannel, mutationChannel,
+            stateChannel, effectChannel
+        )
 
-        mutationChannel
-            .suspendRead()
-            .shiftTo(io())
-            .flatMap { mutation ->
-                pair(
-                    stateChannel.suspendRead().take(1),
-                    just(mutation)
-                )
-            }.shiftTo(computation())
-            .fmap { (state, mutation) ->
-                core.update(state, mutation)
-            }.flatMap { (state, effects) ->
-                pair(
-                    stateChannel.write(state),
-                    effectChannel.write(effects)
-                )
-            }.consume {}
+        val finalStruct = fins.fold(struct) { str, fin ->
+            fin.examine(str)
+        }
 
-        effectChannel
-            .suspendRead()
-            .shiftTo(io())
-            .flatMap { effects ->
-                merge(effects.map(effectHandler::kindfulHandle))
-            }.flatMap { m ->
-                eventChannel.write(m)
-            }.consume {}
+        finalStruct.run {
+
+            flowHandle = eventChannel
+                .suspendRead()
+                .shiftTo(io())
+                .flatMap { event -> coeffectHandler.kindfulHandle(event) }
+                .flatMap { mutationChannel.write(it) }
+                .consume {}
+
+            mutationChannel
+                .suspendRead()
+                .shiftTo(io())
+                .flatMap { mutation ->
+                    pair(
+                        stateChannel.suspendRead().take(1),
+                        just(mutation)
+                    )
+                }.shiftTo(computation())
+                .fmap { (state, mutation) ->
+                    core.update(state, mutation)
+                }.flatMap { (state, effects) ->
+                    pair(
+                        stateChannel.write(state),
+                        effectChannel.write(effects)
+                    )
+                }.consume {}
+
+            effectChannel
+                .suspendRead()
+                .shiftTo(io())
+                .flatMap { effects ->
+                    merge(effects.map(effectHandler::kindfulHandle))
+                }.flatMap { m ->
+                    eventChannel.write(m)
+                }.consume {}
+
+        }
     }
 
     /**
