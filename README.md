@@ -6,7 +6,7 @@ for writing applications using declarative architecture named **The Elm Architec
 Very generally, TEA allows you to encode your UI state management in terms of immutable (or persistent) data structures and pure functions, then supply those to some system, which is able to perform side effects (for Dolphins, it's `dolphins.core.Feature`) and... that's all.
 
 Let's see an example. This is a simple anonymous chat, where messages are received through, maybe, WebSocket (it is actually not relevant at all right now). The user can type in his own message and send them.
-```
+```kotlin
 data class ChatState(
   val messages: List<Message>,
   val input: String
