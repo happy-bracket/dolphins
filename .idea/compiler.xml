@@ -16,6 +16,8 @@
       <entry name="!*.model" />
     </wildcardResourcePatterns>
     <bytecodeTargetLevel>
+      <module name="dolphins.dolphins-coroutines.main" target="1.8" />
+      <module name="dolphins.dolphins-coroutines.test" target="1.8" />
       <module name="dolphins.main" target="1.8" />
       <module name="dolphins.test" target="1.8" />
       <module name="ru.hbracket.dolphins-core.jvmMain" target="1.6" />

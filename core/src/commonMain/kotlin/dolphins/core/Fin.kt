@@ -11,3 +11,5 @@ interface Fin<F, St, Ev, Mu, Ef> {
     fun examine(structure: Structure<F, St, Ev, Mu, Ef>): Structure<F, St, Ev, Mu, Ef>
 
 }
+
+typealias AgnosticFin = Fin<Any?, Any?, Any?, Any?, Any?>
