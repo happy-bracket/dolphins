@@ -2,19 +2,17 @@ package dolphins.rx.feature
 
 import dolphins.core.FunDeps
 import dolphins.core.Handler
-import dolphins.core.postMap
-import dolphins.core.preMap
 import dolphins.foundation.Kind
-import dolphins.rx.types.ForRx
+import dolphins.rx.types.Rx
 import dolphins.rx.types.unfix
 import io.reactivex.Observable
 
 /**
  * Override this to create effect and coeffect handlers.
  */
-abstract class RxHandler<E, M> : Handler<ForRx, E, M>, FunDeps<ForRx> by RxDepBag {
+abstract class RxHandler<E, M> : Handler<Rx, E, M>, FunDeps<Rx> by RxDepBag {
 
-    override fun kindfulHandle(e: E): Kind<ForRx, M> = handle(e).unfix()
+    override fun kindfulHandle(e: E): Kind<Rx, M> = handle(e).unfix()
 
     abstract fun handle(e: E): Observable<M>
 

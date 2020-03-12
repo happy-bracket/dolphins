@@ -4,15 +4,15 @@ import dolphins.core.Core
 import dolphins.core.Feature
 import dolphins.core.Handler
 import dolphins.core.Identity
-import dolphins.rx.types.ForRx
+import dolphins.rx.types.Rx
 
-typealias RxFeature<S, Ev, M, E> = Feature<ForRx, S, Ev, M, E>
+typealias RxFeature<S, Ev, M, E> = Feature<Rx, S, Ev, M, E>
 typealias RxMonoFeature<S, M, E> = RxFeature<S, M, M, E>
 
 fun <S, Ev, M, E> RxFeature(
     core: Core<S, M, E>,
-    coeffects: Handler<ForRx, Ev, M>,
-    effects: Handler<ForRx, E, Ev>
+    coeffects: Handler<Rx, Ev, M>,
+    effects: Handler<Rx, E, Ev>
 ): RxFeature<S, Ev, M, E> =
     Feature(
         RxDepBag,

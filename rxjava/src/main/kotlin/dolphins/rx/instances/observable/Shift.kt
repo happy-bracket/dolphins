@@ -6,16 +6,19 @@ import dolphins.foundation.typeclasses.Shift
 import dolphins.rx.types.*
 import io.reactivex.schedulers.Schedulers
 
-private val RxShiftInstance: Shift<ForRx> =
-    object : Shift<ForRx> {
+private val RxShiftInstance: Shift<Rx> =
+    object : Shift<Rx> {
 
-        override fun computation(): ExecContext<ForRx> =
+        override fun computation(): ExecContext<Rx> =
             RxContext(Schedulers.computation())
 
-        override fun io(): ExecContext<ForRx> =
+        override fun io(): ExecContext<Rx> =
             RxContext(Schedulers.io())
 
-        override fun <A> Kind<ForRx, A>.shiftTo(execContext: ExecContext<ForRx>): Kind<ForRx, A> =
+        override fun single(): ExecContext<Rx> =
+            RxContext(Schedulers.single())
+
+        override fun <A> Kind<Rx, A>.shiftTo(execContext: ExecContext<Rx>): Kind<Rx, A> =
             fix().observeOn(execContext.fix()).unfix()
 
     }
