@@ -1,8 +1,7 @@
-package dolphins.rx.instances.flowable
+package dolphins.rx.instances.observable
 
 import dolphins.foundation.Kind
 import dolphins.foundation.typeclasses.Applicative
-import dolphins.foundation.typeclasses.Functor
 import dolphins.foundation.typeclasses.Monad
 import dolphins.rx.types.ForRx
 import dolphins.rx.types.Rx
