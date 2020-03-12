@@ -12,6 +12,9 @@ private val RxStreamInstance: Stream<Rx> =
         override fun <A, B> Kind<Rx, A>.scan(acc: B, f: (B, A) -> B): Kind<Rx, B> =
             fixed { scan(acc, f) }
 
+        override fun <A> empty(): Kind<Rx, A> =
+            Observable.empty<A>().unfix()
+
         override fun <A> merge(vararg ss: Kind<Rx, A>): Kind<Rx, A> =
             Observable.merge(ss.map { it.fix() }).unfix()
 

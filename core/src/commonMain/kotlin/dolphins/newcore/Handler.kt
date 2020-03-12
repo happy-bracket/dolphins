@@ -6,4 +6,6 @@ interface Handler<F, in In, out Out> {
 
     fun fHandle(input: In): Kind<F, Out>
 
+    companion object
+
 }

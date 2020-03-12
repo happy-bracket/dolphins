@@ -8,6 +8,8 @@ import dolphins.foundation.Kind
  */
 interface Stream<F> : Monad<F> {
 
+    fun <A> empty(): Kind<F, A>
+
     fun <A, B> Kind<F, A>.scan(acc: B, f: (B, A) -> B): Kind<F, B>
 
     fun <A> merge(
