@@ -9,6 +9,7 @@ interface Shift<F> {
 
     fun io(): ExecContext<F>
     fun computation(): ExecContext<F>
+    fun single(): ExecContext<F>
     fun <A> Kind<F, A>.shiftTo(execContext: ExecContext<F>): Kind<F, A>
 
 }

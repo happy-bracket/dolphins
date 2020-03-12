@@ -4,6 +4,10 @@ import dolphins.foundation.Kind
 import dolphins.foundation.typeclasses.Consume
 import dolphins.foundation.typeclasses.Stream
 
+/**
+ * Represents an entity which can receive events of type [Ev] and expose state of type [St] for observation
+ * @see Dolphin - main implementation
+ */
 interface Feature<F, St, Ev, Mu, Ef> : Consume<F>, Stream<F> {
 
     fun offer(event: Ev): Kind<F, Unit>

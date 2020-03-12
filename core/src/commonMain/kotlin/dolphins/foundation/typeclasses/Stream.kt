@@ -18,6 +18,8 @@ interface Stream<F> : Monad<F> {
         ss: List<Kind<F, A>>
     ): Kind<F, A>
 
+    fun <A, B> Kind<F, A>.concatMapEager(f: (A) -> Kind<F, B>): Kind<F, B>
+
     fun <A> Kind<F, A>.take(number: Int): Kind<F, A>
 
 }
