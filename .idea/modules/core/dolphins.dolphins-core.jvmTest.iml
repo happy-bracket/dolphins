@@ -5,9 +5,9 @@
       <configuration version="3" platform="JVM 1.6" allPlatforms="JVM [1.6]" useProjectSettings="false" isTestModule="true" externalProjectId=":dolphins-core">
         <dependsOnModuleNames>dolphins-core_commonTest</dependsOnModuleNames>
         <sourceSets>
-          <sourceSet>dolphins.dolphins-core.jvmMain</sourceSet>
           <sourceSet>dolphins.dolphins-core.commonMain</sourceSet>
           <sourceSet>dolphins.dolphins-core.commonTest</sourceSet>
+          <sourceSet>dolphins.dolphins-core.jvmMain</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <externalSystemTestTasks>jvmTest|:dolphins-core:jvmTest|jvm</externalSystemTestTasks>
